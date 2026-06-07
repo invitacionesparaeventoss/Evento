@@ -312,24 +312,33 @@
     <h1 class="page-title">Panel de<br><em>administración</em></h1>
   </div>
 
+
+
+
+
+
   <!-- STATS — CAMBIO 1: se agrega tarjeta "Lugares no aprovechados" -->
   <div class="stats-grid">
     <div class="stat-card">
-      <div class="stat-label">Invitados registrados</div>
+      <div class="stat-label">Invitados confirmados</div>
       <div class="stat-num" id="stat-regs">—</div>
       <div class="stat-sub">confirmaciones totales</div>
     </div>
+
     <div class="stat-card">
       <div class="stat-label">Espacios reservados</div>
       <div class="stat-num" id="stat-seats">—</div>
       <div class="stat-sub">de 150 disponibles</div>
       <div class="capacity-bar-track"><div class="capacity-bar-fill" id="stat-bar" style="width:0%"></div></div>
     </div>
+
     <div class="stat-card">
-      <div class="stat-label">Espacios libres</div>
-      <div class="stat-num" id="stat-free">—</div>
-      <div class="stat-sub">lugares aún disponibles</div>
+      <div class="stat-label">No aprovechados</div>
+      <div class="stat-num" id="stat-wasted">—</div>
+      <div class="stat-sub">boletos asignados sin usar</div>
     </div>
+
+
     <!--
       CAMBIO 1 — Lugares no aprovechados:
       = suma de (boletos_asignados − boletos_usados) de todos los registros.
@@ -337,16 +346,31 @@
       con menos asistentes de los que tenían asignados.
     -->
     <div class="stat-card waste">
-      <div class="stat-label">No aprovechados</div>
-      <div class="stat-num" id="stat-wasted">—</div>
-      <div class="stat-sub">boletos asignados sin usar</div>
+      <div class="stat-label">Espacios libres</div>
+      <div class="stat-num" id="stat-free">—</div>
+      <div class="stat-sub">lugares aún disponibles</div>
     </div>
+
     <div class="stat-card">
       <div class="stat-label">Invitados en lista</div>
       <div class="stat-num" id="stat-guests">—</div>
       <div class="stat-sub">personas pre-autorizadas</div>
     </div>
   </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   <!-- ══ REGISTROS CONFIRMADOS ══ -->
   <div class="section-header">

@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Grand Event — Registro</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500&family=Great+Vibes&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+  (function(){ emailjs.init({ publicKey: 'jKziPr90pIjf30Gw_' }); })();
+</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -65,7 +69,6 @@
   .envelope-wrap:hover { transform: scale(1.025) translateY(-4px); animation: none; }
   @keyframes floatEnv { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
 
-  /* Cuerpo del sobre */
   .env-svg-wrap {
     position: relative; width: 100%; line-height: 0;
     filter: drop-shadow(0 20px 60px rgba(0,0,0,0.55)) drop-shadow(0 0 40px rgba(199,154,18,0.22));
@@ -73,17 +76,10 @@
   }
   .env-svg-wrap svg { width: 100%; height: auto; display: block; }
 
-  /*
-   * FLAP — el div ocupa exactamente el 50% superior del sobre
-   * porque el triángulo superior del cuerpo va de y=0 a y=170
-   * sobre un total de 340px de alto → 170/340 = 50%.
-   * El SVG del flap usa viewBox="0 0 500 170" con preserveAspectRatio="none"
-   * para que encaje píxel a píxel con el triángulo del cuerpo.
-   */
   .env-flap-wrap {
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 50%;                          /* mitad exacta del cuerpo */
+    height: 50%;
     transform-origin: top center;
     transform-style: preserve-3d;
     transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
@@ -230,18 +226,15 @@
   .dup-title { font-size: 9px; letter-spacing: .45em; color: var(--gold); text-transform: uppercase; margin-bottom: .7rem; }
   .dup-sub { font-size: 11px; color: var(--text-muted); line-height: 1.85; letter-spacing: .07em; margin-bottom: 1rem; }
 
-  /* Fila del nombre (tamaño normal) */
   .resumen-nombre { background: var(--dark-3); border: 1px solid var(--border); padding: 1rem 1.2rem; text-align: center; margin-bottom: 8px; }
   .resumen-label  { font-size: 9px; letter-spacing: .4em; color: var(--gold); text-transform: uppercase; margin-bottom: .4rem; }
   .resumen-value  { font-family: 'Cormorant Garamond', serif; font-weight: 300; color: var(--text); }
   .resumen-nombre .resumen-value { font-size: 1.25rem; }
 
-  /* Cuadro de Lugares confirmados — ocupa todo el ancho, número muy grande */
   .resumen-grid { margin: 0 0 1.4rem; }
   .resumen-item { background: var(--dark-3); border: 1px solid var(--border); padding: 1.6rem 1.2rem; text-align: center; }
   .resumen-item .resumen-value { font-size: 3.5rem; line-height: 1; color: var(--gold-light); }
 
-  /* Barra de capacidad */
   .capacity-block { margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
   .capacity-block-title { font-size: 9px; letter-spacing: .45em; color: var(--gold); text-transform: uppercase; margin-bottom: .9rem; text-align: center; }
   .capacity-badges { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 1rem; }
@@ -271,6 +264,18 @@
     .event-card { padding: 2rem 1.5rem; }
     .envelope-wrap { width: clamp(240px, 85vw, 360px); }
   }
+
+  /* ════ TOGGLE CONTRASEÑA ════ */
+  .pass-wrap { position: relative; }
+  .pass-wrap input { padding-right: 46px !important; width: 100%; }
+  .pass-toggle {
+    position: absolute; right: 0; top: 0; bottom: 0;
+    width: 44px; background: none; border: none;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); transition: color .2s; padding: 0;
+  }
+  .pass-toggle:hover { color: var(--gold); }
+  .pass-toggle svg { pointer-events: none; flex-shrink: 0; }
 
   /* ════ MODAL EDITAR ════ */
   #modal-editar {
@@ -303,7 +308,6 @@
   .modal-eyebrow { font-size: 10px; letter-spacing: .5em; color: var(--gold); text-transform: uppercase; margin-bottom: .6rem; }
   .modal-page-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,5vw,3.2rem); font-weight: 300; line-height: 1.05; }
   .modal-page-title em { font-style: italic; color: var(--gold-light); }
-  /* Card editar */
   .modal-card {
     background: var(--dark-2); border: 1px solid var(--border);
     padding: 2.5rem; position: relative;
@@ -311,7 +315,6 @@
   .modal-card::before, .modal-card::after { content:''; position:absolute; width:16px; height:16px; border-color:var(--gold); border-style:solid; }
   .modal-card::before { top:-1px; left:-1px; border-width:2px 0 0 2px; }
   .modal-card::after  { bottom:-1px; right:-1px; border-width:0 2px 2px 0; }
-  /* Tabs editar */
   .modal-tabs { display:flex; gap:0; margin-bottom:2rem; border:1px solid var(--border); }
   .modal-tab-btn { flex:1; background:transparent; border:none; color:var(--text-muted); font-family:'Montserrat',sans-serif; font-size:10px; letter-spacing:.35em; text-transform:uppercase; padding:12px 8px; cursor:pointer; transition:all .2s; position:relative; }
   .modal-tab-btn.active { color:var(--gold); background:rgba(201,168,76,.06); }
@@ -319,10 +322,8 @@
   .modal-tab-btn:not(.active):hover { color:var(--text); }
   .modal-tab-panel { display:none; }
   .modal-tab-panel.active { display:block; }
-  /* Steps editar */
   .modal-step { display:none; }
   .modal-step.active { display:block; }
-  /* Fields editar */
   .modal-field { margin-bottom:1.3rem; }
   .modal-field label { display:block; font-size:10px; letter-spacing:.3em; color:var(--gold); text-transform:uppercase; margin-bottom:.5rem; font-weight:500; }
   .modal-field input, .modal-field select { width:100%; background:var(--dark-4); border:1px solid var(--border); color:var(--text); font-family:'Montserrat',sans-serif; font-size:14px; padding:12px 14px; outline:none; transition:border-color .3s; }
@@ -333,14 +334,12 @@
   .modal-err.show { display:block; }
   .modal-suc { font-size:11px; color:var(--gold); margin-top:.4rem; display:none; letter-spacing:.1em; }
   .modal-suc.show { display:block; }
-  /* Found banner editar */
   .modal-found-banner { background:rgba(201,168,76,.06); border:1px solid rgba(201,168,76,.35); padding:12px 16px; margin-bottom:1.3rem; }
   .modal-found-label { font-size:9px; letter-spacing:.4em; color:var(--gold); text-transform:uppercase; margin-bottom:4px; }
   .modal-found-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--gold-light); }
   .modal-found-detail { font-size:10px; color:var(--text-muted); margin-top:3px; letter-spacing:.1em; }
   .modal-ticket-note { font-size:10px; color:var(--text-muted); background:rgba(201,168,76,.04); border-left:2px solid var(--gold); padding:10px 14px; margin-bottom:1rem; line-height:1.7; letter-spacing:.05em; }
   .modal-ticket-note strong { color:var(--gold-light); }
-  /* Botones editar */
   .modal-btn-primary { width:100%; background:transparent; border:1px solid var(--gold); color:var(--gold); font-family:'Montserrat',sans-serif; font-size:11px; font-weight:500; letter-spacing:.4em; text-transform:uppercase; padding:14px; cursor:pointer; transition:all .3s; position:relative; overflow:hidden; margin-top:.5rem; }
   .modal-btn-primary::before { content:''; position:absolute; inset:0; background:var(--gold); transform:scaleX(0); transform-origin:left; transition:transform .4s; z-index:0; }
   .modal-btn-primary:hover:not(:disabled)::before { transform:scaleX(1); }
@@ -355,7 +354,6 @@
   .modal-btn-danger:hover:not(:disabled) { border-color:var(--red); }
   .modal-btn-danger:disabled { opacity:.45; cursor:not-allowed; }
   .modal-btn-danger span { position:relative; z-index:1; }
-  /* Footer modal */
   .modal-footer { text-align:center; padding:2.5rem; border-top:1px solid var(--border); font-size:10px; letter-spacing:.3em; color:var(--text-muted); }
 
   /* ════ FAREWELL OVERLAY ════ */
@@ -403,7 +401,6 @@
 
   <div class="envelope-wrap" id="envelope" onclick="openEnvelope()">
 
-    <!-- Carta interior -->
     <div class="env-letter">
       <p class="letter-eyebrow">Una invitación especial</p>
       <div class="letter-names">Rebeca &amp; Sebastian</div>
@@ -412,12 +409,6 @@
       <p class="letter-cta">Ver invitación completa ↓</p>
     </div>
 
-    <!--
-      CUERPO DEL SOBRE — viewBox 500×340, centro en (250,170).
-      El triángulo superior (0,0)→(500,0)→(250,170) se pinta con el
-      mismo tono que el flap para que, antes de abrirse, no haya
-      ninguna diferencia de color visible entre ellos.
-    -->
     <div class="env-svg-wrap">
       <svg viewBox="0 0 500 340" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -434,56 +425,34 @@
             <stop offset="100%" stop-color="#9a7209"/>
           </linearGradient>
         </defs>
-        <!-- Base -->
         <rect x="0" y="0" width="500" height="340" fill="url(#bodyGrad)"/>
-        <!-- Triángulo superior — mismo tono que el flap para que encaje sin costura -->
         <polygon points="0,0 500,0 250,170" fill="#be9210" opacity="0.95"/>
-        <!-- Triángulo izquierdo -->
         <polygon points="0,0 0,340 250,170" fill="url(#leftFold)" opacity="0.85"/>
-        <!-- Triángulo derecho -->
         <polygon points="500,0 500,340 250,170" fill="url(#rightFold)" opacity="0.85"/>
-        <!-- Triángulo inferior -->
         <polygon points="0,340 500,340 250,170" fill="#7a5a06" opacity="0.75"/>
-        <!-- Líneas de pliegue -->
         <line x1="0"   y1="0"   x2="250" y2="170" stroke="rgba(0,0,0,0.18)" stroke-width="1"/>
         <line x1="500" y1="0"   x2="250" y2="170" stroke="rgba(0,0,0,0.18)" stroke-width="1"/>
         <line x1="0"   y1="340" x2="250" y2="170" stroke="rgba(0,0,0,0.16)" stroke-width="1"/>
         <line x1="500" y1="340" x2="250" y2="170" stroke="rgba(0,0,0,0.16)" stroke-width="1"/>
-        <!-- Marco exterior -->
         <rect x="0.5" y="0.5" width="499" height="339" fill="none" stroke="rgba(255,220,100,0.55)" stroke-width="1"/>
       </svg>
     </div>
 
-    <!--
-      FLAP — height:50% porque el triángulo va de y=0 a y=170
-      sobre un cuerpo de 340px de alto (170/340 = 50%).
-      viewBox="0 0 500 170" + preserveAspectRatio="none" garantiza
-      que el triángulo del flap coincida exactamente con el del cuerpo.
-    -->
     <div class="env-flap-wrap">
-      <svg class="env-flap-svg"
-           viewBox="0 0 500 170"
-           preserveAspectRatio="none"
-           fill="none"
-           xmlns="http://www.w3.org/2000/svg">
+      <svg class="env-flap-svg" viewBox="0 0 500 170" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="flapGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#d4a614"/>
             <stop offset="100%" stop-color="#9e7a0a"/>
           </linearGradient>
         </defs>
-        <!-- Triángulo del flap: (0,0)→(500,0)→(250,170), idéntico al del cuerpo -->
         <polygon points="0,0 500,0 250,170" fill="url(#flapGrad)"/>
-        <!-- Líneas de pliegue -->
         <line x1="0"   y1="0" x2="250" y2="170" stroke="rgba(0,0,0,0.2)" stroke-width="1.2"/>
         <line x1="500" y1="0" x2="250" y2="170" stroke="rgba(0,0,0,0.2)" stroke-width="1.2"/>
-        <!-- Borde superior -->
         <line x1="0" y1="0.5" x2="500" y2="0.5" stroke="rgba(255,220,100,0.6)" stroke-width="1"/>
-        <!-- Highlight -->
         <line x1="1" y1="1.5" x2="499" y2="1.5" stroke="rgba(255,235,140,0.15)" stroke-width="1.5"/>
       </svg>
 
-      <!-- Sello de cera justo en la punta del flap -->
       <div class="env-seal">
         <img src="Sello.png" alt="Sello de cera"
              style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 10px 16px rgba(180,30,30,0.45));"/>
@@ -491,8 +460,8 @@
       </div>
     </div>
 
-  </div><!-- /envelope-wrap -->
-</div><!-- /envelope-screen -->
+  </div>
+</div>
 
 
 <!-- ════ MAIN CONTENT ════ -->
@@ -568,10 +537,10 @@
       <img src="Abuelitos.jpg" alt="Rebeca y Sebastian · 1966" style="width:100%;display:block;border:1px solid var(--border);filter:sepia(0.18) contrast(1.04);"/>
     </div>
     <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--text-muted);letter-spacing:0.15em;margin-top:1.2rem;">
-      Rebeca &amp; Sebastian &nbsp;·&nbsp; <span style="color:var(--gold-light);">Est. 1966</span>
+      Rebeca &amp; Sebastian &nbsp;·&nbsp; <span style="color:var(--gold-light);">1966 - 2026</span>
     </p>
     <p class="section-sub" style="margin-top:0.5rem;max-width:480px;margin-left:auto;margin-right:auto;">
-      Hoy, a 60 años de aquella promesa, nos reunimos para celebrar que el amor verdadero no pasa de moda.
+      A 60 años de aquella promesa, nos reunimos para celebrar que el amor verdadero que no pasa de moda.
     </p>
   </div>
 </section>
@@ -660,7 +629,12 @@
           <p class="dup-sub">Invitado confirmado. Ingresa tu contraseña para ver tus boletos confirmados.</p>
           <div class="field">
             <label for="dup-password">Contraseña</label>
-            <input type="password" id="dup-password" placeholder="Ingresa la contraseña con la que confirmaste">
+            <div class="pass-wrap">
+              <input type="password" id="dup-password" placeholder="Ingresa la contraseña con la que confirmaste">
+              <button type="button" class="pass-toggle" onclick="togglePass('dup-password', this)" tabindex="-1" aria-label="Mostrar u ocultar contraseña">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
             <p class="error-msg" id="err-dup-pass">Contraseña incorrecta.</p>
           </div>
           <button class="btn-submit" id="btn-dup-verificar" onclick="verificarDuplicado()">
@@ -728,7 +702,7 @@
         </div>
       </div>
 
-      <!-- Contraseña -->
+      <!-- Contraseña nueva -->
       <div class="extra-fields" id="extra-fields">
         <div class="alert-box">
           <div class="alert-icon">🔑</div>
@@ -738,13 +712,23 @@
         </div>
         <div class="field">
           <label for="password">Tu contraseña personal</label>
-          <input type="password" id="password" placeholder="Elige una contraseña (mín. 4 caracteres)" oninput="checkPassAlert()">
+          <div class="pass-wrap">
+            <input type="password" id="password" placeholder="Elige una contraseña (mín. 4 caracteres)" oninput="checkPassAlert()">
+            <button type="button" class="pass-toggle" onclick="togglePass('password', this)" tabindex="-1" aria-label="Mostrar u ocultar contraseña">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
           <p class="field-hint">Anótala en un lugar seguro. Sin ella no podrás editar ni cancelar tu registro.</p>
           <p class="error-msg" id="err-pass">La contraseña debe tener al menos 4 caracteres.</p>
         </div>
         <div class="field">
           <label for="password2">Confirmar contraseña</label>
-          <input type="password" id="password2" placeholder="Repite tu contraseña">
+          <div class="pass-wrap">
+            <input type="password" id="password2" placeholder="Repite tu contraseña">
+            <button type="button" class="pass-toggle" onclick="togglePass('password2', this)" tabindex="-1" aria-label="Mostrar u ocultar contraseña">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
           <p class="error-msg" id="err-pass2">Las contraseñas no coinciden.</p>
         </div>
         <div class="pass-alert" id="pass-alert">
@@ -796,15 +780,12 @@
               ¿Necesitas modificar tu registro?
             </button>
           </div>
-
         </div>
       </div>
 
     </div><!-- /form-card -->
   </div>
 </section>
-
-
 
 <footer>
   &copy; 2026 &nbsp;·&nbsp; Rebeca &amp; Sebastian &nbsp;·&nbsp; 8 de agosto
@@ -1002,6 +983,20 @@
     btn.disabled=false; btn.textContent='Acceder a mi confirmación';
   };
 
+  // ── EMAILJS: NOTIFICACIONES ─────────────────────────
+  window.enviarNotificacion = async function(tipo, nombre, boletos) {
+    try {
+      await emailjs.send('service_h04x7af', 'template_yybiajp', {
+        tipo_evento:     tipo,
+        nombre_invitado: nombre,
+        boletos:         String(boletos),
+        fecha:           new Date().toLocaleString('es-MX', { dateStyle:'full', timeStyle:'short' })
+      });
+    } catch(e) {
+      console.warn('EmailJS error:', e);
+    }
+  };
+
   window.handleSubmit=async()=>{
     if(!lookupDone) return;
     const nombre=document.getElementById('nombre').value.trim();
@@ -1019,7 +1014,6 @@
     btn.disabled=true; btnTxt.textContent='Guardando...';
     try {
       const hash=await hashPass(pass);
-
       await addDoc(collection(db,'asistentes'),{
         nombre, nombre_lower:normalize(nombre),
         password_hash:hash,
@@ -1029,7 +1023,8 @@
         fecha:new Date().toLocaleDateString('es-MX'),
         timestamp:Date.now()
       });
-
+      // Notificación por correo — nueva confirmación
+      await enviarNotificacion('✅ Nueva confirmación', nombre, boletos);
       document.getElementById('extra-fields').classList.remove('show');
       document.getElementById('ticket-selector').classList.remove('show');
       document.getElementById('ticket-banner').classList.remove('show');
@@ -1047,6 +1042,16 @@
     }
   };
 
+  /* ════ TOGGLE VER CONTRASEÑA ════ */
+  window.togglePass = (id, btn) => {
+    const input = document.getElementById(id);
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    btn.querySelector('svg').innerHTML = isHidden
+      ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'
+      : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  };
+
   function onEnter(el, fn){
     el.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); fn(); } });
   }
@@ -1056,6 +1061,7 @@
   onEnter(document.getElementById('password'),     ()=>document.getElementById('password2').focus());
   onEnter(document.getElementById('password2'),    handleSubmit);
 </script>
+
 <!-- ════ FAREWELL OVERLAY ════ -->
 <div id="farewell-overlay">
   <div class="farewell-box">
@@ -1092,7 +1098,6 @@
 
     <div class="modal-card">
 
-      <!-- TABS -->
       <div class="modal-tabs">
         <button class="modal-tab-btn active" id="modal-tab-editar" onclick="modalSwitchTab('editar')">Editar lugares</button>
         <button class="modal-tab-btn" id="modal-tab-cancelar" onclick="modalSwitchTab('cancelar')">Cancelar registro</button>
@@ -1100,8 +1105,6 @@
 
       <!-- ── TAB: EDITAR ── -->
       <div class="modal-tab-panel active" id="modal-panel-editar">
-
-        <!-- Paso 1: buscar -->
         <div class="modal-step active" id="modal-edit-step1">
           <div class="modal-field">
             <label>Nombre del destinatario</label>
@@ -1112,7 +1115,6 @@
           <button class="modal-btn-primary" id="modal-btn-edit-buscar" onclick="modalEditBuscar()"><span>Buscar mi registro</span></button>
         </div>
 
-        <!-- Paso 2: editar -->
         <div class="modal-step" id="modal-edit-step2">
           <div class="modal-found-banner">
             <div class="modal-found-label">✦ Registro encontrado</div>
@@ -1125,7 +1127,12 @@
           </div>
           <div class="modal-field">
             <label>Contraseña personal</label>
-            <input type="password" id="modal-edit-pass" placeholder="Tu contraseña">
+            <div class="pass-wrap">
+              <input type="password" id="modal-edit-pass" placeholder="Tu contraseña">
+              <button type="button" class="pass-toggle" onclick="togglePass('modal-edit-pass', this)" tabindex="-1" aria-label="Mostrar u ocultar contraseña">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
             <p class="modal-err" id="modal-edit-err-pass">Contraseña incorrecta.</p>
           </div>
           <div class="modal-field">
@@ -1138,13 +1145,10 @@
           <button class="modal-btn-primary" id="modal-btn-edit-guardar" onclick="modalEditGuardar()"><span>Guardar cambios</span></button>
           <button class="modal-btn-secondary" onclick="modalEditReset()">Buscar otro nombre</button>
         </div>
-
       </div>
 
       <!-- ── TAB: CANCELAR ── -->
       <div class="modal-tab-panel" id="modal-panel-cancelar">
-
-        <!-- Paso 1: buscar -->
         <div class="modal-step active" id="modal-cancel-step1">
           <div class="modal-field">
             <label>Nombre del destinatario</label>
@@ -1155,7 +1159,6 @@
           <button class="modal-btn-primary" id="modal-btn-cancel-buscar" onclick="modalCancelBuscar()"><span>Buscar mi registro</span></button>
         </div>
 
-        <!-- Paso 2: confirmar cancelación -->
         <div class="modal-step" id="modal-cancel-step2">
           <div class="modal-found-banner">
             <div class="modal-found-label">✦ Registro encontrado</div>
@@ -1168,7 +1171,12 @@
           </div>
           <div class="modal-field">
             <label>Contraseña personal</label>
-            <input type="password" id="modal-cancel-pass" placeholder="Tu contraseña">
+            <div class="pass-wrap">
+              <input type="password" id="modal-cancel-pass" placeholder="Tu contraseña">
+              <button type="button" class="pass-toggle" onclick="togglePass('modal-cancel-pass', this)" tabindex="-1" aria-label="Mostrar u ocultar contraseña">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
             <p class="modal-err" id="modal-cancel-err-pass">Contraseña incorrecta.</p>
           </div>
           <p class="modal-err" id="modal-cancel-err-fb">Error de conexión. Intenta de nuevo.</p>
@@ -1177,13 +1185,17 @@
             <button class="modal-btn-secondary" onclick="modalCancelReset()">Volver atrás</button>
           </div>
         </div>
-
       </div>
 
     </div><!-- /modal-card -->
 
     <div class="modal-footer">
       &copy; 2026 &nbsp;·&nbsp; Rebeca &amp; Sebastian &nbsp;·&nbsp; 8 de agosto
+      <br>
+      <button onclick="probarNotificacion()" id="btn-test-email" style="margin-top:1rem;background:none;border:1px dashed rgba(201,168,76,.3);color:rgba(201,168,76,.4);font-family:'Montserrat',sans-serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;padding:7px 16px;cursor:pointer;transition:all .3s;" onmouseover="this.style.borderColor='rgba(201,168,76,.7)';this.style.color='rgba(201,168,76,.8)'" onmouseout="this.style.borderColor='rgba(201,168,76,.3)';this.style.color='rgba(201,168,76,.4)'">
+        Probar notificación de correo
+      </button>
+      <p id="test-email-result" style="font-size:10px;margin-top:.5rem;letter-spacing:.1em;display:none;"></p>
     </div>
   </div>
 </div>
@@ -1193,7 +1205,6 @@
   import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc, query, where }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  // Reusar la instancia existente de Firebase si ya fue inicializada
   const firebaseConfig = {
     apiKey: "AIzaSyCC_NG5KUl1lR75BJPc27Svc_G75bcplhM",
     authDomain: "registroeventos-f3f80.firebaseapp.com",
@@ -1211,7 +1222,6 @@
     return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
   }
 
-  // ── ABRIR / CERRAR MODAL ─────────────────────────────
   window.abrirModalEditar = (tab) => {
     const modal = document.getElementById('modal-editar');
     modal.classList.add('open');
@@ -1225,10 +1235,8 @@
     document.body.style.overflow = '';
   };
 
-  // Cerrar con Escape
   document.addEventListener('keydown', e => { if(e.key==='Escape') cerrarModalEditar(); });
 
-  // ── TABS ────────────────────────────────────────────
   window.modalSwitchTab = (tab) => {
     document.querySelectorAll('.modal-tab-btn').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.modal-tab-panel').forEach(p=>p.classList.remove('active'));
@@ -1236,11 +1244,9 @@
     document.getElementById('modal-panel-'+tab).classList.add('active');
   };
 
-  // ── STATE ────────────────────────────────────────────
   let mEditDocId=null, mEditHash=null, mEditAsignados=null;
   let mCancelDocId=null, mCancelHash=null;
 
-  // ── EDITAR: PASO 1 ───────────────────────────────────
   window.modalEditBuscar = async () => {
     const nombre = document.getElementById('modal-edit-nombre').value.trim();
     const btn = document.getElementById('modal-btn-edit-buscar');
@@ -1280,7 +1286,6 @@
     }
   };
 
-  // ── EDITAR: GUARDAR ──────────────────────────────────
   window.modalEditGuardar = async () => {
     const pass = document.getElementById('modal-edit-pass').value;
     const nuevos = parseInt(document.getElementById('modal-edit-boletos').value);
@@ -1299,7 +1304,9 @@
         btn.disabled=false; btn.querySelector('span').textContent='Guardar cambios'; return;
       }
       await updateDoc(doc(db2,'asistentes',mEditDocId), { boletos_usados: nuevos });
-      // Actualizar resumen visible en la página principal
+      // Notificación por correo — edición de boletos
+      const nombreEditado = document.getElementById('modal-edit-found-name').textContent;
+      await enviarNotificacion('✏️ Edición de lugares', nombreEditado, nuevos);
       const boletosEl1 = document.getElementById('dup-resumen-boletos');
       const boletosEl2 = document.getElementById('conf-boletos-usados');
       if(boletosEl1) boletosEl1.textContent = nuevos;
@@ -1309,7 +1316,6 @@
       setTimeout(() => {
         cerrarModalEditar();
         modalEditReset();
-        // Scroll al resumen correspondiente
         const resumen = document.getElementById('duplicado-resumen');
         const conf    = document.getElementById('confirmacion-resumen');
         const target  = (conf && conf.classList.contains('show')) ? conf : (resumen && resumen.classList.contains('show')) ? resumen : null;
@@ -1333,7 +1339,6 @@
     document.getElementById('modal-edit-step1').classList.add('active');
   };
 
-  // ── CANCELAR: PASO 1 ─────────────────────────────────
   window.modalCancelBuscar = async () => {
     const nombre = document.getElementById('modal-cancel-nombre').value.trim();
     const btn = document.getElementById('modal-btn-cancel-buscar');
@@ -1364,7 +1369,6 @@
     }
   };
 
-  // ── CANCELAR: CONFIRMAR ──────────────────────────────
   window.modalCancelConfirm = async () => {
     const pass = document.getElementById('modal-cancel-pass').value;
     const btn = document.getElementById('modal-btn-cancel-confirm');
@@ -1379,18 +1383,18 @@
         btn.disabled=false; btn.querySelector('span').textContent='Cancelar mi asistencia'; return;
       }
       await deleteDoc(doc(db2,'asistentes',mCancelDocId));
-      // Cerrar modal y mostrar overlay de despedida
+      // Notificación por correo — cancelación
+      const nombreCancelado = document.getElementById('modal-cancel-found-name').textContent;
+      const boletosCancelados = document.getElementById('modal-cancel-found-detail').textContent;
+      await enviarNotificacion('❌ Cancelación de registro', nombreCancelado, boletosCancelados);
       cerrarModalEditar();
       modalCancelReset();
-      // Limpiar el resumen de la página principal
       ['duplicado-panel','duplicado-resumen','confirmacion-resumen','ticket-banner','ticket-selector','extra-fields','pass-alert'].forEach(id=>{ const el=document.getElementById(id); if(el){ el.classList.remove('show'); el.style.display=''; } });
       const nombreEl = document.getElementById('nombre');
       if(nombreEl){ nombreEl.disabled=false; nombreEl.value=''; }
       const btnBuscar = document.getElementById('btn-buscar');
       if(btnBuscar){ btnBuscar.style.display=''; btnBuscar.disabled=false; btnBuscar.textContent='Verificar invitación'; }
-      // Resetear estado del formulario principal (función global)
       if(typeof resetLookup === 'function') resetLookup();
-      // Mostrar overlay despedida
       document.getElementById('farewell-overlay').classList.add('open');
       btn.disabled=false; btn.querySelector('span').textContent='Cancelar mi asistencia';
     } catch(e){
@@ -1400,7 +1404,6 @@
     }
   };
 
-  // ── ENTER EN MODAL ───────────────────────────────────
   function onModalEnter(id, fn){
     const el = document.getElementById(id);
     if(el) el.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); fn(); } });
@@ -1414,9 +1417,35 @@
   window.cerrarFarewell = () => {
     document.getElementById('farewell-overlay').classList.remove('open');
     document.body.style.overflow = '';
-    // Scroll suave de regreso a la invitación
     const registro = document.getElementById('registro');
     if(registro) registro.scrollIntoView({behavior:'smooth', block:'start'});
+  };
+
+  // ── PRUEBA DE NOTIFICACIÓN ───────────────────────────
+  window.probarNotificacion = async () => {
+    const btn = document.getElementById('btn-test-email');
+    const result = document.getElementById('test-email-result');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    result.style.display = 'none';
+    try {
+      await emailjs.send('service_h04x7af', 'template_yybiajp', {
+        tipo_evento:     '🧪 Correo de prueba',
+        nombre_invitado: 'Invitado de prueba',
+        boletos:         '2',
+        fecha:           new Date().toLocaleString('es-MX', { dateStyle:'full', timeStyle:'short' })
+      });
+      result.style.display = 'block';
+      result.style.color = '#6fcf97';
+      result.textContent = '✦ Correo enviado correctamente. Revisa tu bandeja.';
+    } catch(e) {
+      result.style.display = 'block';
+      result.style.color = '#e2725b';
+      result.textContent = '✗ Error: ' + (e?.text || e?.message || JSON.stringify(e));
+      console.error('EmailJS prueba error:', e);
+    }
+    btn.disabled = false;
+    btn.textContent = 'Probar notificación de correo';
   };
 
   window.modalCancelReset = () => {
